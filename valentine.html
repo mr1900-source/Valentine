@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Be My Valentine</title>
+<style>
+    body {
+        background: #ffe6f0;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 120px;
+        overflow: hidden;
+    }
+
+    h1 {
+        font-size: 40px;
+        color: #ff3366;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 12px 25px;
+        margin: 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+    #yes {
+        background-color: #ff4d6d;
+        color: white;
+    }
+
+    #no {
+        position: absolute;
+        background-color: #999;
+        color: white;
+    }
+
+    .heart {
+        position: absolute;
+        color: #ff4d6d;
+        animation: float 6s linear infinite;
+        font-size: 24px;
+    }
+
+    @keyframes float {
+        from { transform: translateY(100vh); }
+        to { transform: translateY(-10vh); }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Will you be my Valentine? ❤️</h1>
+
+<button id="yes" onclick="sayYes()">Yes</button>
+<button id="no" onmouseover="moveButton()">No</button>
+
+<script>
+function sayYes() {
+    document.body.innerHTML = "<h1>Yay!!! ❤️❤️❤️</h1><h2>I can't wait for our Valentine's Day!</h2>";
+}
+
+function moveButton() {
+    let btn = document.getElementById("no");
+    let x = Math.random() * (window.innerWidth - 100);
+    let y = Math.random() * (window.innerHeight - 50);
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+}
+
+/* floating hearts */
+setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.fontSize = (20 + Math.random() * 30) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+}, 500);
+</script>
+
+</body>
+</html>
