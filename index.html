@@ -1,86 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Be My Valentine</title>
+
 <style>
-    body {
-        background: #ffe6f0;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 120px;
-        overflow: hidden;
-    }
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#ffe6f0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    text-align:center;
+    overflow:hidden;
+}
 
-    h1 {
-        font-size: 40px;
-        color: #ff3366;
-    }
+.container{
+    position:relative;
+    width:90%;
+    max-width:500px;
+}
 
-    button {
-        font-size: 20px;
-        padding: 12px 25px;
-        margin: 20px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-    }
+h1{
+    color:#ff3366;
+    font-size:clamp(26px, 5vw, 42px);
+}
 
-    #yes {
-        background-color: #ff4d6d;
-        color: white;
-    }
+button{
+    padding:14px 28px;
+    font-size:clamp(16px, 3vw, 20px);
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    margin:12px;
+}
 
-    #no {
-        position: absolute;
-        background-color: #999;
-        color: white;
-    }
+#yes{
+    background:#ff4d6d;
+    color:white;
+    animation:grow 6s infinite alternate;
+}
 
-    .heart {
-        position: absolute;
-        color: #ff4d6d;
-        animation: float 6s linear infinite;
-        font-size: 24px;
-    }
+@keyframes grow{
+    from{transform:scale(1);}
+    to{transform:scale(1.25);}
+}
 
-    @keyframes float {
-        from { transform: translateY(100vh); }
-        to { transform: translateY(-10vh); }
-    }
+#no{
+    position:absolute;
+    background:#999;
+    color:white;
+    transition: all 0.25s ease;
+}
+
+img{
+    margin-top:20px;
+    max-width:80%;
+    border-radius:16px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Will you be my Valentine? ❤️</h1>
-
-<button id="yes" onclick="sayYes()">Yes</button>
-<button id="no" onmouseover="moveButton()">No</button>
+<div class="container" id="main">
+    <h1>Will you be my Valentine? ❤️</h1>
+    <button id="yes" onclick="sayYes()">Yes</button>
+    <button id="no">No</button>
+</div>
 
 <script>
-function sayYes() {
-    document.body.innerHTML = "<h1>Yay!!! ❤️❤️❤️</h1><h2>I can't wait for our Valentine's Day!</h2>";
+const noBtn = document.getElementById("no");
+
+function moveAway(x,y){
+    const rect = noBtn.getBoundingClientRect();
+    const dx = x - (rect.left + rect.width/2);
+    const dy = y - (rect.top + rect.height/2);
+    const distance = Math.sqrt(dx*dx + dy*dy);
+
+    if(distance < 120){
+        noBtn.style.left = (rect.left - dx*0.6) + "px";
+        noBtn.style.top  = (rect.top - dy*0.6) + "px";
+    }
 }
 
-function moveButton() {
-    let btn = document.getElementById("no");
-    let x = Math.random() * (window.innerWidth - 100);
-    let y = Math.random() * (window.innerHeight - 50);
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
+document.addEventListener("mousemove",(e)=>{
+    moveAway(e.clientX,e.clientY);
+});
+
+document.addEventListener("touchmove",(e)=>{
+    const t = e.touches[0];
+    moveAway(t.clientX,t.clientY);
+});
+
+function sayYes(){
+    document.body.innerHTML = `
+    <div style="text-align:center;padding:20px;">
+        <h1>YayYayYayYay Yippee!!! ❤️</h1>
+        <h2>Cancel all plans February 14th — especially at 7 PM ;) .</h2>
+
+        <img src="https://tenor.com/view/cat-tongue-shake-cat-meme-white-cat-tongue-cat-gif-17638709254706960287">
+
+        <br><br>
+        <button onclick="reset()">Why do you even want to answer again?<br>Am I not good enough? So you hate me?</button>
+    </div>`;
 }
 
-/* floating hearts */
-setInterval(() => {
-    let heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = (20 + Math.random() * 30) + "px";
-    document.body.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 6000);
-}, 500);
+function reset(){
+    location.reload();
+}
 </script>
 
 </body>
