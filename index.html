@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
+    <title>For Fiorella</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800&family=Pacifico&display=swap" rel="stylesheet">
     
     <style>
@@ -16,112 +16,216 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Prevents scrollbars when button moves */
+            overflow: hidden;
+            text-align: center;
         }
 
-        /* The glass card effect */
         .card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
             width: 90%;
+            max-width: 450px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             position: relative;
             z-index: 10;
         }
 
         h1 {
             color: #ff3366;
-            font-family: 'Pacifico', cursive; /* Fancy font for header */
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        /* Placeholder for your photo */
-        .us-photo {
-            width: 200px;
-            height: 200px;
-            object-fit: cover; /* Ensures photo doesn't stretch weirdly */
-            border-radius: 15px;
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            background-color: #ffe6f0;
+            font-family: 'Pacifico', cursive;
+            line-height: 1.4;
+            min-height: 100px;
         }
 
         .btn-container {
             margin-top: 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 20px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* This invisible box keeps the Yes button from moving to the center */
+        .btn-spacer {
+            width: 100px; 
+            height: 50px;
+            visibility: hidden;
         }
 
         button {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 12px 25px;
+            font-size: 1.1rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s;
-            font-family: 'Nunito', sans-serif;
             font-weight: 800;
+            z-index: 11;
         }
 
-        #yes {
+        #yes, #start-btn {
             background-color: #ff3366;
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
-        }
-
-        #yes:hover {
-            transform: scale(1.05);
-            background-color: #e62e5c;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+            transition: transform 0.2s;
         }
 
         #no {
-            background-color: #e0e0e0;
-            color: #555;
-            position: relative; /* Default position */
+            background-color: #999;
+            color: white;
+            white-space: nowrap;
+            transition: left 0.2s ease, top 0.2s ease; /* Smooth glide */
         }
 
-        /* CSS for the falling elements (Flowers/Hearts) */
-        .falling-element {
-            position: fixed;
-            top: -10vh;
-            font-size: 2rem;
-            animation: fall linear forwards;
-            z-index: 5;
+        #sass-message {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            height: 20px;
         }
 
-        @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+        .us-photo {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 15px;
         }
 
-        /* Success Message Styling */
-        .success-content img {
-            max-width: 100%;
+        .cat-gif {
+            width: 100%;
+            max-width: 220px;
             border-radius: 15px;
-            margin-top: 20px;
+            margin: 10px auto;
         }
-        
-        .reset-btn {
-            background: transparent;
-            color: #ff3366;
-            font-size: 0.8rem;
-            text-decoration: underline;
-            margin-top: 20px;
-            opacity: 0.7;
+
+        .hidden { display: none; }
+        .invisible { opacity: 0; pointer-events: none; }
+
+        /* Animations */
+        .word-span { opacity: 0; display: inline-block; margin: 0 4px; }
+        .fade-in { animation: fadeIn 0.6s forwards; }
+        @keyframes fadeIn { to { opacity: 1; pointer-events: auto; } }
+
+        .heart {
+            position: fixed;
+            top: -10%;
+            animation: fall linear forwards;
+            z-index: 1;
         }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="card" id="main-card">
-        <img src="https://placehold.co/400x400/ffccdd/ff3366?text=Image+of+Us" alt="Us" class="us-photo">
-        
-        <h1>
+        <div id="intro-section">
+            <h1>I have an important question...</h1>
+            <button id="start-btn" onclick="startQuestion()">WHAT IS IT?</button>
+        </div>
+
+        <div id="question-section" class="hidden">
+            <h1 id="valentine-text"></h1>
+            <div id="sass-message"></div>
+            
+            <div class="btn-container invisible" id="button-reveal">
+                <button id="yes" onclick="sayYes()">YES!</button>
+                <div class="btn-spacer" id="spacer"></div>
+                <button id="no">No</button>
+            </div>
+        </div>
+
+        <div id="success-section" class="hidden">
+            <img src="https://mail.google.com/mail/u/0?ui=2&ik=3558bb3e59&attid=0.2&permmsgid=msg-a:r2936162802516872770&th=19c3b412221a30f9&view=fimg&fur=ip&permmsgid=msg-a:r2936162802516872770&sz=s0-l75-ft&attbid=ANGjdJ8fFe9Q_cv69_JjbU1gmSWT8q4Us-0sTqpFYNhzUUUeR9CyjOOIHdeBqjREncfwufz3hPWaiSoPk7FoKDp_9K4oGWPFXdMFbayJfUeM_5GkK_bElDJM9iaTCQs&disp=emb&realattid=19c3b410ebaa20f33102&zw" class="us-photo">
+            <h1>YAYYAYYAYYAY!!! I'm excited hella ❤️</h1>
+            <p>Cancel plans for February 14th — especially at 7 PM ;)</p>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZueXFmZzRreXN6Zmt4ZzRreXN6Zmt4ZzRreXN6Zmt4ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif" class="cat-gif">
+            <br>
+            <button onclick="location.reload()" style="background:none; color:#ff3366; text-decoration:underline; font-size:0.8rem;">Go back to start</button>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById("no");
+        const sassText = document.getElementById("sass-message");
+        let noCount = 0;
+
+        function startQuestion() {
+            document.getElementById("intro-section").classList.add("hidden");
+            document.getElementById("question-section").classList.remove("hidden");
+            
+            const fullText = "Will you, Fiorella, be, on this 14th of February, 2026, the year of our Lord and savior, my Valentine?";
+            const words = fullText.split(" ");
+            const container = document.getElementById("valentine-text");
+            
+            let totalDelay = 0;
+            words.forEach((word, index) => {
+                const span = document.createElement("span");
+                span.innerText = word + " ";
+                span.className = "word-span";
+                container.appendChild(span);
+                
+                const delay = (index * 700) + (Math.pow(index, 1.6) * 60);
+                totalDelay = delay;
+                setTimeout(() => {
+                    span.classList.add("fade-in");
+                }, delay);
+            });
+
+            // Reveal buttons after the last word is shown
+            setTimeout(() => {
+                document.getElementById("button-reveal").classList.remove("invisible");
+                document.getElementById("button-reveal").classList.add("fade-in");
+            }, totalDelay + 1000);
+        }
+
+        // Smoother No Button Movement
+        noBtn.addEventListener("mouseover", moveNo);
+        noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); moveNo(); });
+
+        function moveNo() {
+            noCount++;
+            
+            // Show the spacer so the Yes button doesn't move to the center
+            document.getElementById("spacer").style.display = "block";
+
+            if (noCount === 1) sassText.innerText = "Whoops, must've been a mouse slip haha";
+            if (noCount === 5) sassText.innerText = "Yes means si by the way I know English isn't your first language";
+            if (noCount === 10) sassText.innerText = "You're funny if you think you had a choice.";
+
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 60) + 30;
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 60) + 30;
+            
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
+        function sayYes() {
+            document.getElementById("question-section").classList.add("hidden");
+            document.getElementById("success-section").classList.remove("hidden");
+            noBtn.style.display = "none";
+
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = Math.random() > 0.5 ? "❤️" : "🌸";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+                heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 250);
+        }
+    </script>
+</body>
+</html>
